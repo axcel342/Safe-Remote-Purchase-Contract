@@ -32,7 +32,7 @@ contract Purchase {
     error InvalidState();
     /// The provided value has to be even.
     error ValueNotEven();
-    error TimestampNotInRangeError(uint blocktimestamp,uint _timestamp);
+    error TimestampNotInRangeError(string str,uint blocktimestamp, string str2,uint _timestamp);
 
     //modifier lets us reuse code, any function with name of modifier results in modifier being called first
 
@@ -60,7 +60,7 @@ contract Purchase {
             if(_timestamp < _Blockstamp + Min_delay)    //checks if timestamp < 5mins
             {
             console.log(block.timestamp);                                               //logs current time stamp on terminal            
-            revert TimestampNotInRangeError(_Blockstamp, _timestamp);                   //reverts changes and throws error
+            revert TimestampNotInRangeError( "Target blocktimestamp: ",_Blockstamp+300, "Current blocktimestamp: ",_timestamp);                   //reverts changes and throws error
             }
         }    
         _;
@@ -72,7 +72,7 @@ contract Purchase {
     event PurchaseConfirmed();
     event ItemReceived();
     event SellerRefunded();
-    event itworks();
+    event itworks(string str, uint blocktimestamp);
 
     // Ensure that `msg.value` is an even number.
     // Division will truncate if it is an odd number.
@@ -167,7 +167,7 @@ contract Purchase {
         inState(State.Locked)                           
         BuyerorTimeElapsed(block.timestamp)             //calls buyerortimeelapsed modifier
     {
-        emit itworks();
+        emit itworks("Current Blocktimestamp: ", block.timestamp);
         state = State.Release;                          //state set to release
         state = State.Inactive;                         //state set to inactive    
         seller.transfer(3 * value);                     //Seller returned his deposit plus price on item sold    
